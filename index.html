@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"> </script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-1.8.2.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            //$("#txtUid").focus();
+
+            $("#txtUid").blur(function() {
+
+                /*var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/   ;*/
+
+                var uid = $("#txtUid").val();
+
+                if (uid == "") {
+                    $("#errSUid").html("Fill the UserId");
+                } else {
+                    $("#errSUid").html("");
+                    var actionUrl = "ajax-signup-userid-chk.php?uid=" + uid;
+                    $.get(actionUrl, function(response) {
+                        $("#avalUid").html(response);
+
+                    });
+                }
+
+            });
+            /*  $("txtUid").blur(function(){
+                var uid=$("#txtUid").val();
+                var actionUrl="ajax-signup-userid-chk.php?uid="+uid;
+                $.get(actionUrl,function(response){
+                    $("#avalUid").html(response);
+                });
+            });    */
+            $("#txtPwd").keydown(function() {
+                var pwd = $(this).val();
+                if (pwd.length <= 4)
+                    $("#errPwd").html("weak");
+                else
+                if (pwd.length > 4 && pwd.length <= 7)
+                    $("#errPwd").html("Average");
+                else
+                    $("#errPwd").html("Strong");
+
+            });
+            $("#txtMob").blur(function() {
+                var r = /^[6-9]{1}[0-9]{9}$/;
+                var pwd = $("#txtMob").val();
+
+                if (r.test(pwd) == false) {
+                    $("#errMob").html("Invalid Mobile number");
+                } else {
+                    $("#errMob").html("Okay");
+
+                }
+
+            });
+
+            $("#signup").click(function() {
+
+                var uid = $("#txtUid").val();
+                var pwd = $("#txtPwd").val();
+                var mobile = $("#txtMob").val();
+                var worker = document.getElementById("Worker");
+                var citizen = document.getElementById("Citizen");
+                //var category = "";
+                /* var category = $("#category").val();
+                 alert(category);*/
+                if (uid == "" || pwd == "" || mobile == "") {
+                    $("#signupnotify").html("Enter above all fields");
+                    /*if (document.getElementById("Worker").checked) {
+                        var category = "Worker";
+                        alert(category);
+                    } else if (document.getElementById("Citizen").checked) {
+                        var category = "Citizen";
+                        alert(category);
+                    } else
+                        $("#signupnotify").html("Enter above all fields");*/
+                } else if ((worker.checked) || (citizen.checked)) {
+
+                    if (worker.checked) {
+                        category = "Worker";
+                        alert(category);
+
+                    } else {
+                        category = "Citizen";
+                        alert(category);
+
+                    }
+                    var actionUrl = "ajax-signup-main.php?uid=" + uid + "&pwd=" + pwd + "&mobile=" + mobile + "&category=" + category;
+                    $.get(actionUrl, function(response) {
+
+                        $("#signupnotify").html(response);
+                        
+                    });
+
+
+                } else {
+                    $("#signupnotify").html("Enter above all fields");
+
+                }
+            });
+            $("#login").click(function() {
+                //$("txtUid1").focusin();
+                var uid = $("#txtUid1").val();
+                var pwd = $("#txtPwd1").val();
+                var actionUrl = "ajax-login-main.php?uid=" + uid + "&pwd=" + pwd;
+                $.get(actionUrl, function(response) {
+                    if (response == "Citizen") {
+                        $("#loginnotify").html("Logged in as " + response);
+                        location.href = "dash-citizen.php";
+                    } else if (response == "Worker") {
+                        $("#loginnotify").html("Logged in as " + response);
+                        location.href = "dash-worker.php";
+                    } else
+                        $("#loginnotify").html(response);
+
+                });
+            });
+            $("#forgotpwd").click(function() {
+                var uid = $("#txtUid2").val();
+                var actionUrl = "ajax-forgotpwd-main.php?uid=" + uid;
+                $.getJSON(actionUrl, function(aryresponse) {
+                    alert(JSON.stringify(aryresponse));
+                    alert(aryresponse[0].mobile);
+                    var mobile = aryresponse[0].mobile;
+                    var pwd = aryresponse[0].pwd;
+                    var url = "sms-forgetpwd-for-index.php?uid=" + uid + "&pwd=" + pwd + "&mobile=" + mobile;
+                    $.get(url, function(response) {
+                        $("#forgetpwdnotify").html(response);
+                    });
+                    /*var show = JSON.stringify(response);
+                    var ary=new Array();
+                    ary=response["mobile"];
+                    alert(ary[]);*/
+
+
+
+                    //$("#forgetpwdnotify").html(response.pwd);
+                });
+            });
+            $("#admin").click(function(){
+                window.location.href = "dash-admin.php";
+            });
+                             
+        });
+    </script>
+    <style>
+        .space {
+            /*width: 759px;*/
+            background: #118ab2;
+            border: 1px solid white;
+        }
+
+        .service {
+           /* width: inherit;*/
+            height: 60px;
+            border: 1px solid black;
+            font-size: 35px;
+            text-align: center;
+            background-color: #09203f;
+            color: white;
+
+        }
+
+        /*.developer{
+            width:1130px;
+            height: 550px;
+            background-color:lightcyan;
+           margin-left: 200px;
+            border: 1px sold black;
+        }*/
+        /*table, tr, td, img
+        {
+            
+            width:350px;
+        }*/
+        /*table, tr, td, div
+        {
+            width: 100px;
+        }*/
+
+        .bottom {
+            /*width: inherit;*/
+            height: 120px;
+            background-color: lightgoldenrodyellow;
+        }
+
+        .box {
+            /*width: 759px;*/
+            height: 120px;
+            border: 1px solid black;
+            float: left;
+        }
+
+        #cards {
+           
+            background-color: aliceblue;
+        }
+
+        .card {
+
+            background-color: white;
+            margin-left: 80px;    
+        }
+        .map
+        {
+            background-color:#ADEFD1FF;
+            border: 1px solid #09203f;
+;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Image and text -->
+    <div class="row">
+        <nav class="col-md-12 navbar navbar-dark " style="background-color: #09203f;">
+            <div class="col-md-6">
+                <a class="navbar-brand" href="index.html">
+<!--                   <img scr="pics/MPS.jpg" style="width: 50px; height: 20px;">-->
+                   <i> <h3 >Man Power Services<h5>   </h5></h3>
+                    </i>
+                </a>
+            </div>
+            <div style=" text-align: end">
+               <div class="btn btn-warning float-left" id="admin" style=" width:140px"><i class="fa fa-unlock" style="font-size: 20px;" aria-hidden="true"></i> Admin</div>
+                <div class="btn btn-primary float-left" data-toggle="modal" data-target="#modalSignup" style=" width:150px"><i class="fa fa-user-plus" style="font-size: 20px" aria-hidden="true"></i> Signup</div>
+                <div class="btn btn-primary float-left" data-toggle="modal" data-target="#modalLogin" style="margin-left: 5px; width:150px"><i class="fa fa-sign-in" style="font-size: 20px" aria-hidden="true"></i> Login</div>
+            </div>
+        </nav>
+    </div>
+    <div class="row">
+        <div id="carouselExampleCaptions" class="col-md-12 carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="pics/mpsbannerrr.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="pics/mpsbanner.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="pics/banner1-mps.jpg" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="service row">
+        <div class="col-md-12">
+            <font face="Matura MT Script Capitals">Our Services</font>
+        </div>
+    </div>
+    <div class="row">
+    <div id="cards"  >
+        <div class="card" style="width: 18rem;height: 25rem; border-radius: 30px; float: left">
+            <img src="pics/findworker.jpg" style="border-radius: 50%;" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Worker Search</h5>
+                <p class="card-text">You can search for a worker, you need.</p>
+
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;height: 25rem;border-radius: 30px; float: left">
+            <img src="pics/getwork.jpg" style="margin-top: 70px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <br><br>
+                <h5 class="card-title">Get Work</h5>
+
+                <p class="card-text">Worker/Contrator can get work online.</p>
+
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;height: 25rem; border-radius: 30px; float: left">
+            <img src="pics/postrequirements.png" style="height: 270px; margin-top: 20px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">Post Work/Requirement</h5>
+                <p class="card-text">Post a request for Work from home.</p>
+
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;height: 25rem;border-radius: 30px; float: left">
+            <img src="pics/rateworker.jpg" style="margin-top: 70px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <br><br>
+                <h5 class="card-title">Rate Worker</h5>
+                <p class="card-text">Worker can get ratings according to their work.</p>
+
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="service row">
+        <div class="col-12">
+            <font face="Matura MT Script Capitals">Meet the Developer</font>
+        </div>
+    </div>
+
+
+    <div class="row" style="text-align:center;background-image: url(pics/back2.png); background-repeat: no-repeat; background-position: center; ">
+        <div class="col-md-3 offset-2 ">
+            <center><img src="pics/sir.jpg" width="250px" style="border-radius: 30%; "></center>
+        </div>
+        <div class="col-md-3 offset-2 ">
+            <center><img src="pics/IMG_20200205_004305_874.jpg" width="250px" style="border-radius: 30%"></center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>
+                <font face="Viner Hand ITC" color="red" size="10">Mentor</font>
+            </center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>
+                <font face="Viner Hand ITC" color="red" size="6">Developer</font>
+            </center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>
+                <font face="Lucida Calligraphy" size="4">Rajesh Bansal</font><br><i>(SCJP-Sun Certified Java Programmer)<br>Microsoft Certified Specialist</i>
+            </center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>
+                <font face="Lucida Calligraphy" size="4">Paramjot Singh</font>
+            </center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Academic Qualification: M.Sc(IT) ,MCA (Master Of Computer Application)</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>College: Thapar Institute of Engineering and Technology.</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Author Of: Real Jave(www.realJavaOnline.com)</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Branch: Computer Engineering.</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Email: bcebti@gmail.com</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Email: psingh6_be18@thapar.edu</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Contact: 98722-46056</center>
+        </div>
+        <div class="col-md-3 offset-2">
+            <center>Contact: 94635-78662</center>
+        </div>
+    </div>
+    <!--<div class="developer" style="text-align:center;background-image: url(pics/back2.png); background-repeat: no-repeat; background-position: center; background-size: contain">
+        <table cellpadding="2" cellspacing="6">
+            <tr >
+                <td><center><img src="pics/sir.jpg" width="250px" style="border-radius: 30%"></center></td>
+                <td style="margin-left: 150px"></td>
+                <td ><center><img src="pics/IMG_20200205_004305_874.jpg" width="250px" style="border-radius: 30%"></center></td>
+            </tr>
+            <tr>
+                <th><center><font face="Viner Hand ITC" color="red" size="10">Mentor</font></center></th>
+                 <td></td>
+                <th ><center><font face="Viner Hand ITC" color="red" size="6">Developer</font></center></th>
+            </tr>
+            <tr>
+                <th ><center><font face="Lucida Calligraphy"  size="4">Rajesh Bansal</font><br><i>(SCJP-Sun Certified Java Programmer)<br>Microsoft Certified Specialist</i></center></th>
+                <td></td>
+                <th ><center><font face="Lucida Calligraphy"  size="4">Paramjot Singh</font></center></th>
+            </tr>
+            <tr>
+                <td align="center">Academic Qualification: M.Sc(IT) ,MCA (Master Of Computer Application)</td>
+                 <td></td>
+                <td align="center">College: Thapar Institute of Engineering and Technology.</td>
+            </tr>
+            <tr>
+                <td align="center">Author Of: Real Jave(www.realJavaOnline.com)</td>
+                 <td></td>
+                <td align="center">Branch: Computer Engineering.</td>
+            </tr>
+            <tr>
+                <td align="center">Email: bcebti@gmail.com</td>
+                 <td></td>
+                <td align="center">Email: psingh6_be18@thapar.edu</td>
+            </tr>
+            <tr>
+                <td align="center">Contact: 98722-46056</td>
+                 <td></td>
+                <td align="center">Contact: 94635-78662</td>
+            </tr>
+        </table>
+   </div>-->
+
+    <div class="service row">
+        <div class="col-12">
+            <font face="Matura MT Script Capitals" style="">Reach Us</font>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-md-6 map" > 
+    <center>
+                <font face="Constantia" size="4" color="black">Location </font><i class="fa fa-map-marker" style="font-size: 20px, " aria-hidden="true"></i>
+            </center>
+            <div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6842.807229962798!2d76.5223326740522!3d30.959216926234962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390555ca312e0c87%3A0x826cd44dd8fb7182!2sAdarsh%20Nagar%2C%20Bal%20Sanda%2C%20Rupnagar%2C%20Punjab%20140001!5e0!3m2!1sen!2sin!4v1594764952213!5m2!1sen!2sin" width="100%" height="120" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+            </div>
+            <div class="col-md-6 map">
+                <center>
+                <font face="Constantia" size="4" color=black>Facebook Page </font><i class="fa fa-facebook-official" style="font-size: 20px" aria-hidden="true"></i>
+            </center>
+            </div>
+    </div>
+     
+    <!--<div class="row">
+        <div style="float:        <div class="col-md-6 box">left" class="col-md-6 space">
+            <center>
+                <font face="Constantia" size="4" color=white>Location </font><i class="fa fa-map-marker" style="font-size: 20px, " aria-hidden="true"></i>
+            </center>
+        </div>
+        <div style="float:left" class="col-md-6 space">
+            <center>
+                <font face="Constantia" size="4" color=white>Facebook Page </font><i class="fa fa-facebook-official" style="font-size: 20px" aria-hidden="true"></i>
+            </center>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 box"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6842.807229962798!2d76.5223326740522!3d30.959216926234962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390555ca312e0c87%3A0x826cd44dd8fb7182!2sAdarsh%20Nagar%2C%20Bal%20Sanda%2C%20Rupnagar%2C%20Punjab%20140001!5e0!3m2!1sen!2sin!4v1594764952213!5m2!1sen!2sin" width="100%" height="120" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe></div>
+        <div class="col-md-6 box"></div>
+
+    </div>-->
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalSignup">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #09203f;">
+                    <h5 class="modal-title" style="color: white">Signup</h5>
+                    <button type="button" class="close  btn-danger" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="txtUid">User Id/Email Id</label>
+                            <div id="errUid" class="err"></div>
+                            <input type="text" required class="form-control" name="txtUid" id="txtUid">
+                            <span id="errSUid" class="form-text text-muted" style="text-align: right"></span>
+                            <span id="avalUid" class="form-text text-muted" style="text-align: left"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" required class="form-control" name="txyPwd" id="txtPwd">
+                            <span id="errPwd" class="form-text text-muted" style="text-align: right"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtMob">Mobile Number</label>
+                            <input type="text" required class="form-control" name="txtMob" id="txtMob">
+                            <small id="errMob" class="form-text text-muted" style="text-align: right"></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Category</label>
+                            <br>
+                            <input type="radio" name="category" id="Worker" value="Worker">Worker
+                            <input type="radio" name="category" id="Citizen" value="Citizen" style="margin-left: 100px">Citizen
+                            <!--<select id="category" required size="2" style="margin-left: 30px; overflow-y: hidden; width: 100px; ">
+                                <option value="Worker">1. Worker</option>
+                                <option value="Citizen">2. Citizen</option>
+                            </select>-->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span class="form-text text-muted" id="signupnotify"></span>
+                    <input type="button" class="btn btn-primary" id="signup" value="Submit" data-dismiss="<modal></modal>">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalLogin">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #09203f;">
+                    <h5 class="modal-title" style="color: white">Login</h5>
+                    <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="txtUid1">User Id/Email Id</label>
+                            <input type="text" class="form-control" name="txtUid1" id="txtUid1">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtPwd1">Password</label>
+                            <input type="password" class="form-control" name="txyPwd1" id="txtPwd1">
+                            <a data-toggle="modal" href="#Forgetpwd" data-dismiss="modal">Forget password?</a>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span class="form-text text-muted" id="loginnotify"></span>
+                    <input type="button" class="btn btn-primary" id="login" value="Login">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="Forgetpwd">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #09203f;">
+                    <h5 class="modal-title" style="color: white">Forget Password</h5>
+                    <button type="button" class="close btn-danger" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="txtUid2">User Id/Email Id</label>
+                            <input type="text" class="form-control" name="txtUid2" id="txtUid2">
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span class="form-text text-muted" id="forgetpwdnotify"></span>
+                    <input type="button" class="btn btn-info" id="forgotpwd" value="Send Message">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body></html>
