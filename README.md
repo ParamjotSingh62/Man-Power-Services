@@ -1,1 +1,2 @@
 # Man-Power-Services
+It is a household service provider website where customers and workers can create their profiles. Customers can post and manage their requirements/works as per their need. Can also rate the worker according to their service, can find worker directly by entering specific city and work. where as workers can find work and contact customers for their service and can request for rating as well. creatd different dashboards for customers, workers and admin. Admin can take a look or keep an record of all the workers and customers using the website.
